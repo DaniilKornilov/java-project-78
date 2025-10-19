@@ -1,47 +1,22 @@
 package hexlet.code.schema;
 
-public class StringSchema {
-    private boolean required = false;
-    private Integer minLength = null;
-    private String contains = null;
+import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
+import static hexlet.code.schema.PredicateUtils.requiredPredicate;
+
+public class StringSchema extends BaseSchema<String> {
 
     public StringSchema required() {
-        removeValidators();
-        this.required = true;
+        addCheck(CheckType.REQUIRED, requiredPredicate(value -> !value.isEmpty()));
         return this;
     }
 
-    public StringSchema minLength(int length) {
-        removeValidators();
-        this.minLength = length;
+    public StringSchema minLength(int minLength) {
+        addCheck(CheckType.MIN_LENGTH, notRequiredPredicate(value -> value.length() >= minLength));
         return this;
     }
 
-    public StringSchema contains(String substr) {
-        removeValidators();
-        this.contains = substr;
+    public StringSchema contains(String substring) {
+        addCheck(CheckType.CONTAINS, notRequiredPredicate(value -> value.contains(substring)));
         return this;
-    }
-
-    public boolean isValid(Object value) {
-        if (value == null) {
-            return !required;
-        }
-        if (!(value instanceof String s)) {
-            return false;
-        }
-        if (s.isEmpty()) {
-            return !required;
-        }
-        if (minLength != null && s.length() < minLength) {
-            return false;
-        }
-        return contains == null || s.contains(contains);
-    }
-
-    private void removeValidators() {
-        this.required = false;
-        this.minLength = null;
-        this.contains = null;
     }
 }
