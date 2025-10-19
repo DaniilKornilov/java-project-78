@@ -49,6 +49,7 @@ sonar {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0")
+    testImplementation("org.assertj:assertj-core:3.27.6")
 }
 
 tasks.test {
