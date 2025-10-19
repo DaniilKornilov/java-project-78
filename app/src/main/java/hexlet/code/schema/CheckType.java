@@ -6,4 +6,5 @@ public enum CheckType {
     CONTAINS,
     POSITIVE,
     RANGE,
+    SIZE_OF,
 }

@@ -6,17 +6,17 @@ import static hexlet.code.schema.PredicateUtils.requiredPredicate;
 public class StringSchema extends BaseSchema<String> {
 
     public StringSchema required() {
-        addCheck(CheckType.REQUIRED, requiredPredicate(value -> !value.isEmpty()));
+        addCheck(CheckType.REQUIRED, requiredPredicate(string -> !string.isEmpty()));
         return this;
     }
 
     public StringSchema minLength(int minLength) {
-        addCheck(CheckType.MIN_LENGTH, notRequiredPredicate(value -> value.length() >= minLength));
+        addCheck(CheckType.MIN_LENGTH, notRequiredPredicate(string -> string.length() >= minLength));
         return this;
     }
 
     public StringSchema contains(String substring) {
-        addCheck(CheckType.CONTAINS, notRequiredPredicate(value -> value.contains(substring)));
+        addCheck(CheckType.CONTAINS, notRequiredPredicate(string -> string.contains(substring)));
         return this;
     }
 }

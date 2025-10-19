@@ -1,10 +1,13 @@
 package hexlet.code;
 
+import hexlet.code.schema.MapSchema;
 import hexlet.code.schema.NumberSchema;
 import hexlet.code.schema.StringSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,7 +87,7 @@ public class ValidatorTest {
         }
 
         @Test
-        void testPositive() {
+        void testPositiveSchema() {
             assertThat(schema.positive().isValid(null)).isTrue();
             assertThat(schema.positive().isValid(-10)).isFalse();
             assertThat(schema.positive().isValid(0)).isFalse();
@@ -92,12 +95,53 @@ public class ValidatorTest {
         }
 
         @Test
-        void testRange() {
+        void testRangeSchema() {
             assertThat(schema.range(5, 10).isValid(null)).isTrue();
             assertThat(schema.range(5, 10).isValid(5)).isTrue();
             assertThat(schema.range(5, 10).isValid(10)).isTrue();
             assertThat(schema.range(5, 10).isValid(4)).isFalse();
             assertThat(schema.range(5, 10).isValid(11)).isFalse();
+        }
+
+        @Test
+        void testMultipleSchemas() {
+            assertThat(schema.range(5, 10).range(1, 4).isValid(2)).isTrue();
+            assertThat(schema.required().positive().range(1, 10).isValid(9)).isTrue();
+        }
+    }
+
+    @Nested
+    class MapSchemaTest {
+        private MapSchema schema;
+
+        @BeforeEach
+        void prepareSchema() {
+            schema = validator.map();
+        }
+
+        @Test
+        void testWithoutSchema() {
+            assertThat(schema.isValid(null)).isTrue();
+            assertThat(schema.isValid(Map.of())).isTrue();
+        }
+
+        @Test
+        void testRequiredSchema() {
+            assertThat(schema.required().isValid(null)).isFalse();
+            assertThat(schema.required().isValid(Map.of())).isTrue();
+        }
+
+        @Test
+        void testSize() {
+            assertThat(schema.sizeof(2).isValid(null)).isTrue();
+            assertThat(schema.sizeof(2).isValid(Map.of(1, 2))).isFalse();
+            assertThat(schema.sizeof(2).isValid(Map.of(1, 2, 3, 4))).isTrue();
+        }
+
+        @Test
+        void testMultipleSchemas() {
+            assertThat(schema.sizeof(1).sizeof(1).isValid(Map.of(1, 2))).isTrue();
+            assertThat(schema.required().sizeof(1).sizeof(2).isValid(Map.of(1, 2, 3, 4))).isTrue();
         }
     }
 }
