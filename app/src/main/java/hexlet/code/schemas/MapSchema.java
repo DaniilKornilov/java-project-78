@@ -1,9 +1,9 @@
-package hexlet.code.schema;
+package hexlet.code.schemas;
 
 import java.util.Map;
 
-import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
-import static hexlet.code.schema.PredicateUtils.requiredPredicate;
+import static hexlet.code.schemas.PredicateUtils.notRequiredPredicate;
+import static hexlet.code.schemas.PredicateUtils.requiredPredicate;
 
 public final class MapSchema extends BaseSchema<Map<?, ?>> {
 

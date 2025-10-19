@@ -1,8 +1,8 @@
 package hexlet.code;
 
-import hexlet.code.schema.MapSchema;
-import hexlet.code.schema.NumberSchema;
-import hexlet.code.schema.StringSchema;
+import hexlet.code.schemas.MapSchema;
+import hexlet.code.schemas.NumberSchema;
+import hexlet.code.schemas.StringSchema;
 
 public final class Validator {
 

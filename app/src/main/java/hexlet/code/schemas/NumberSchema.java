@@ -1,7 +1,7 @@
-package hexlet.code.schema;
+package hexlet.code.schemas;
 
-import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
-import static hexlet.code.schema.PredicateUtils.requiredPredicate;
+import static hexlet.code.schemas.PredicateUtils.notRequiredPredicate;
+import static hexlet.code.schemas.PredicateUtils.requiredPredicate;
 
 public final class NumberSchema extends BaseSchema<Integer> {
 

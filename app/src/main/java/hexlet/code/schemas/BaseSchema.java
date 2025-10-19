@@ -1,4 +1,4 @@
-package hexlet.code.schema;
+package hexlet.code.schemas;
 
 import java.util.EnumMap;
 import java.util.Map;
