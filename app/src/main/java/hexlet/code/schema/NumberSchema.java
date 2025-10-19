@@ -3,7 +3,7 @@ package hexlet.code.schema;
 import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
 import static hexlet.code.schema.PredicateUtils.requiredPredicate;
 
-public class NumberSchema extends BaseSchema<Integer> {
+public final class NumberSchema extends BaseSchema<Integer> {
 
     public NumberSchema required() {
         addCheck(CheckType.REQUIRED, requiredPredicate(number -> true));

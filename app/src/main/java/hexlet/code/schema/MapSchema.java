@@ -5,7 +5,7 @@ import java.util.Map;
 import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
 import static hexlet.code.schema.PredicateUtils.requiredPredicate;
 
-public class MapSchema extends BaseSchema<Map<Object, Object>> {
+public final class MapSchema extends BaseSchema<Map<Object, Object>> {
 
     public MapSchema required() {
         addCheck(CheckType.REQUIRED, requiredPredicate(Map.class::isInstance));

@@ -3,7 +3,7 @@ package hexlet.code.schema;
 import static hexlet.code.schema.PredicateUtils.notRequiredPredicate;
 import static hexlet.code.schema.PredicateUtils.requiredPredicate;
 
-public class StringSchema extends BaseSchema<String> {
+public final class StringSchema extends BaseSchema<String> {
 
     public StringSchema required() {
         addCheck(CheckType.REQUIRED, requiredPredicate(string -> !string.isEmpty()));

@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ValidatorTest {
+public final class ValidatorTest {
 
     private Validator validator;
 
@@ -22,6 +22,8 @@ public class ValidatorTest {
 
     @Nested
     class StringSchemaTest {
+        private static final int MIN_LENGTH = 10;
+
         private StringSchema schema;
 
         @BeforeEach
@@ -53,20 +55,23 @@ public class ValidatorTest {
 
         @Test
         void testMinLengthSchema() {
-            assertThat(schema.minLength(10).isValid(null)).isTrue();
-            assertThat(schema.minLength(10).isValid("Hexlet")).isFalse();
-            assertThat(schema.minLength(10).isValid("what does the fox say")).isTrue();
+            assertThat(schema.minLength(MIN_LENGTH).isValid(null)).isTrue();
+            assertThat(schema.minLength(MIN_LENGTH).isValid("Hexlet")).isFalse();
+            assertThat(schema.minLength(MIN_LENGTH).isValid("what does the fox say")).isTrue();
         }
 
         @Test
         void testMultipleSchemas() {
-            assertThat(schema.minLength(10).minLength(4).isValid("Hexlet")).isTrue();
-            assertThat(schema.required().contains("what").minLength(10).isValid("what does the fox say")).isTrue();
+            assertThat(schema.minLength(MIN_LENGTH).minLength(1).isValid("Hexlet")).isTrue();
+            assertThat(schema.required().contains("what").minLength(MIN_LENGTH).isValid("what does the fox")).isTrue();
         }
     }
 
     @Nested
     class NumberSchemaTest {
+        private static final int LOWER_BOUND = 5;
+        private static final int UPPER_BOUND = 10;
+
         private NumberSchema schema;
 
         @BeforeEach
@@ -77,41 +82,46 @@ public class ValidatorTest {
         @Test
         void testWithoutSchema() {
             assertThat(schema.isValid(null)).isTrue();
-            assertThat(schema.isValid(5)).isTrue();
+            assertThat(schema.isValid(1)).isTrue();
         }
 
         @Test
         void testRequiredSchema() {
             assertThat(schema.required().isValid(null)).isFalse();
-            assertThat(schema.required().isValid(10)).isTrue();
+            assertThat(schema.required().isValid(1)).isTrue();
         }
 
         @Test
         void testPositiveSchema() {
             assertThat(schema.positive().isValid(null)).isTrue();
-            assertThat(schema.positive().isValid(-10)).isFalse();
+            assertThat(schema.positive().isValid(-1)).isFalse();
             assertThat(schema.positive().isValid(0)).isFalse();
-            assertThat(schema.positive().isValid(100)).isTrue();
+            assertThat(schema.positive().isValid(1)).isTrue();
         }
 
         @Test
         void testRangeSchema() {
-            assertThat(schema.range(5, 10).isValid(null)).isTrue();
-            assertThat(schema.range(5, 10).isValid(5)).isTrue();
-            assertThat(schema.range(5, 10).isValid(10)).isTrue();
-            assertThat(schema.range(5, 10).isValid(4)).isFalse();
-            assertThat(schema.range(5, 10).isValid(11)).isFalse();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).isValid(null)).isTrue();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).isValid(LOWER_BOUND)).isTrue();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).isValid(UPPER_BOUND)).isTrue();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).isValid(LOWER_BOUND - 1)).isFalse();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).isValid(UPPER_BOUND + 1)).isFalse();
         }
 
         @Test
         void testMultipleSchemas() {
-            assertThat(schema.range(5, 10).range(1, 4).isValid(2)).isTrue();
-            assertThat(schema.required().positive().range(1, 10).isValid(9)).isTrue();
+            assertThat(schema.range(LOWER_BOUND, UPPER_BOUND).range(0, 1).isValid(1)).isTrue();
+            assertThat(schema.required().positive().range(LOWER_BOUND, UPPER_BOUND).isValid(1)).isFalse();
         }
     }
 
     @Nested
     class MapSchemaTest {
+        private static final int KEY1 = 1;
+        private static final int VALUE1 = 2;
+        private static final int KEY2 = 3;
+        private static final int VALUE2 = 4;
+
         private MapSchema schema;
 
         @BeforeEach
@@ -134,14 +144,14 @@ public class ValidatorTest {
         @Test
         void testSize() {
             assertThat(schema.sizeof(2).isValid(null)).isTrue();
-            assertThat(schema.sizeof(2).isValid(Map.of(1, 2))).isFalse();
-            assertThat(schema.sizeof(2).isValid(Map.of(1, 2, 3, 4))).isTrue();
+            assertThat(schema.sizeof(2).isValid(Map.of(KEY1, VALUE1))).isFalse();
+            assertThat(schema.sizeof(2).isValid(Map.of(KEY1, VALUE1, KEY2, VALUE2))).isTrue();
         }
 
         @Test
         void testMultipleSchemas() {
-            assertThat(schema.sizeof(1).sizeof(1).isValid(Map.of(1, 2))).isTrue();
-            assertThat(schema.required().sizeof(1).sizeof(2).isValid(Map.of(1, 2, 3, 4))).isTrue();
+            assertThat(schema.sizeof(1).sizeof(1).isValid(Map.of(KEY1, VALUE1))).isTrue();
+            assertThat(schema.required().sizeof(1).sizeof(2).isValid(Map.of(KEY1, VALUE1, KEY2, VALUE2))).isTrue();
         }
     }
 }
