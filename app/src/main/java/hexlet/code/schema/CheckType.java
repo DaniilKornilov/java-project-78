@@ -7,4 +7,5 @@ public enum CheckType {
     POSITIVE,
     RANGE,
     SIZE_OF,
+    SHAPE,
 }

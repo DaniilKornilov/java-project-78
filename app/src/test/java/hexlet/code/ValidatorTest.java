@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import hexlet.code.schema.BaseSchema;
 import hexlet.code.schema.MapSchema;
 import hexlet.code.schema.NumberSchema;
 import hexlet.code.schema.StringSchema;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -142,10 +144,32 @@ public final class ValidatorTest {
         }
 
         @Test
-        void testSize() {
+        void testSizeSchema() {
             assertThat(schema.sizeof(2).isValid(null)).isTrue();
             assertThat(schema.sizeof(2).isValid(Map.of(KEY1, VALUE1))).isFalse();
             assertThat(schema.sizeof(2).isValid(Map.of(KEY1, VALUE1, KEY2, VALUE2))).isTrue();
+        }
+
+        @Test
+        void testShapeSchema() {
+            Map<String, BaseSchema<String>> schemas = new HashMap<>();
+            schemas.put("firstName", validator.string().required());
+            schemas.put("lastName", validator.string().required().minLength(2));
+
+            Map<String, String> human1 = new HashMap<>();
+            human1.put("firstName", "John");
+            human1.put("lastName", "Smith");
+            assertThat(schema.shape(schemas).isValid(human1)).isTrue();
+
+            Map<String, String> human2 = new HashMap<>();
+            human2.put("firstName", "John");
+            human2.put("lastName", null);
+            assertThat(schema.shape(schemas).isValid(human2)).isFalse();
+
+            Map<String, String> human3 = new HashMap<>();
+            human3.put("firstName", "Anna");
+            human3.put("lastName", "B");
+            assertThat(schema.shape(schemas).isValid(human3)).isFalse();
         }
 
         @Test
